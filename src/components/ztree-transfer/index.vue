@@ -60,7 +60,8 @@
     import "./assets/js/jquery.ztree.excheck.min";
     import "./assets/js/jquery.ztree.exhide.min";
     import "./assets/css/zTreeStyle/zTreeStyle.css";
-    import originData from "./assets/data";
+    import standardData from "./assets/standardData";
+    import simpleData from "./assets/simpleData";
 
     export default {
         name: "ZTreeTransfer",
@@ -187,8 +188,13 @@
             getData() {
                 // 定时器模拟从接口获取数据
                 setTimeout(() => {
-                    this.leftNodes = originData;
+
+                    this.leftNodes = standardData;
                     const echoData = ['1598552881013854211', '1661973549545558016']; // 回显数据，这里是有序id集合
+
+                    // this.leftNodes = simpleData;
+                    // const echoData = [];
+
                     // 初始化树
                     this.leftTree = this.initTree(this.leftTreeDomId, this.leftNodes, this.leftSearchId);
                     this.leftFlattenNodes = this.leftTree.transformToArray(this.leftTree.getNodes());
@@ -213,6 +219,12 @@
                     data: {
                         key: {
                             name: "key",
+                        },
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "pId",
+                            rootPId: -1
                         }
                     },
                     check: {
@@ -315,7 +327,7 @@
             toRight() {
                 this.loading = true;
                 this.rightFlattenNodes.forEach(node => {
-                    this.rightTree.checkNode(node, false, true);
+                    this.rightTree.checkNode(node, false, false);
                 });
                 this.rightCheckedLeaf = 0;
                 this.rightTree.hideNodes(this.rightFlattenNodes); // 隐藏所有节点，不兼容exedit扩展
@@ -348,9 +360,6 @@
                     }
                     this.rightNodes = showNodes;// 穿梭时展示全部
                     this.rightTree.showNodes(showNodes); // 显示左树勾选节点
-                    // this.rightTree.getNodesByFilter(node=>node.isHidden && node.checked).forEach(node=>{
-                    //     this.rightTree.checkNode(node, false, true);
-                    // })
                     this.rightHasNode = !!this.rightNodes.length;
                     this.rightSearchContent = ''; // 清空搜索内容
                     this.loading = false;

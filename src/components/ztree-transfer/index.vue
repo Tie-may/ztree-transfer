@@ -314,6 +314,10 @@
             // 右穿梭
             toRight() {
                 this.loading = true;
+                this.rightFlattenNodes.forEach(node => {
+                    this.rightTree.checkNode(node, false, true);
+                });
+                this.rightCheckedLeaf = 0;
                 this.rightTree.hideNodes(this.rightFlattenNodes); // 隐藏所有节点，不兼容exedit扩展
                 setTimeout(() => {
                     const leftCheckNodes = this.leftTree.getNodesByFilter(node => node.checked); // 获取左树勾选节点，包括隐藏的
@@ -334,13 +338,19 @@
                         }
                         rIdx++;
                     }
-                    // 搜索后进行穿梭，如果取消选中父节点（仍有选中的子节点），则需要获取该节点
                     let showNodes = [];
-                    nodes.forEach(node => {
-                        showNodes = Array.from(new Set([...node.getPath(), ...showNodes])); // 获取所有要展示的节点
-                    });
+                    if (this.leftSearchState) { // 搜索后进行穿梭，如果取消选中父节点但其仍有选中的子节点，则需要获取该节点
+                        nodes.forEach(node => {
+                            showNodes = Array.from(new Set([...node.getPath(), ...showNodes])); // 获取所有要展示的节点
+                        });
+                    } else {
+                        showNodes = nodes;
+                    }
                     this.rightNodes = showNodes;// 穿梭时展示全部
                     this.rightTree.showNodes(showNodes); // 显示左树勾选节点
+                    // this.rightTree.getNodesByFilter(node=>node.isHidden && node.checked).forEach(node=>{
+                    //     this.rightTree.checkNode(node, false, true);
+                    // })
                     this.rightHasNode = !!this.rightNodes.length;
                     this.rightSearchContent = ''; // 清空搜索内容
                     this.loading = false;

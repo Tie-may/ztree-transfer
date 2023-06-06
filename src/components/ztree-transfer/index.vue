@@ -188,7 +188,7 @@
                 // 定时器模拟从接口获取数据
                 setTimeout(() => {
                     this.leftNodes = originData;
-                    const echoData = []; // 回显数据，这里是有序id集合
+                    const echoData = ['1598552881013854211', '1661973549545558016']; // 回显数据，这里是有序id集合
                     // 初始化树
                     this.leftTree = this.initTree(this.leftTreeDomId, this.leftNodes, this.leftSearchId);
                     this.leftFlattenNodes = this.leftTree.transformToArray(this.leftTree.getNodes());
@@ -314,8 +314,8 @@
             // 右穿梭
             toRight() {
                 this.loading = true;
+                this.rightTree.hideNodes(this.rightFlattenNodes); // 隐藏所有节点，不兼容exedit扩展
                 setTimeout(() => {
-                    this.rightTree.hideNodes(this.rightFlattenNodes); // 隐藏所有节点，不兼容exedit扩展
                     const leftCheckNodes = this.leftTree.getNodesByFilter(node => node.checked); // 获取左树勾选节点，包括隐藏的
                     this.rightTotalLeaf = 0;
                     let lIdx = 0, rIdx = 0;

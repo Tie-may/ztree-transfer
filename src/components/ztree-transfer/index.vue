@@ -284,11 +284,10 @@
             toLeft() {
                 this.loading = true;
                 setTimeout(() => {
-                    if (!this.leftSearchState) {
+                    if (this.leftSearchState) {
+                        this.leftSearchContent = '';// 清空搜索内容
+                        this.leftSearchState = false;
                         this.leftTree.showNodes(this.leftFlattenNodes); // 穿梭时展示全部
-                    }
-                    if (!this.rightSearchState) {
-                        this.rightTree.showNodes(this.rightNodes);
                     }
                     const rightCheckNodes = this.rightTree.getNodesByFilter(node => node.checked);
                     const nodes = [];
@@ -317,18 +316,15 @@
                     showNodes.forEach(node => {
                         showNodes = Array.from(new Set([...node.getPath(), ...showNodes])); // 获取所有要展示的节点
                     });
-                    this.rightHasNode = !!this.rightTree.getNodesByFilter(node => !node.isHidden).length;
+                    this.rightHasNode = !!showNodes.filter(node => !node.isHidden).length;
                     this.rightNodes = showNodes;
-                    this.leftSearchContent = '';// 清空搜索内容
                     this.loading = false;
                 }, this.loadingTime);
             },
             // 右穿梭
             toRight() {
                 this.loading = true;
-                this.rightFlattenNodes.forEach(node => {
-                    this.rightTree.checkNode(node, false, false);
-                });
+                this.rightTree.checkAllNodes(false); // 取消勾选，避免左穿梭时右树勾选节点隐藏后不参与计算
                 this.rightCheckedLeaf = 0;
                 this.rightTree.hideNodes(this.rightFlattenNodes); // 隐藏所有节点，不兼容exedit扩展
                 setTimeout(() => {
@@ -359,9 +355,10 @@
                         showNodes = nodes;
                     }
                     this.rightNodes = showNodes;// 穿梭时展示全部
-                    this.rightTree.showNodes(showNodes); // 显示左树勾选节点
                     this.rightHasNode = !!this.rightNodes.length;
                     this.rightSearchContent = ''; // 清空搜索内容
+                    this.rightSearchState = false;
+                    this.rightTree.showNodes(showNodes); // 显示左树勾选节点
                     this.loading = false;
                 }, this.loadingTime);
             },

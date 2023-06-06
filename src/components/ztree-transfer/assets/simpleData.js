@@ -27,6 +27,12 @@ const dataMaker = function (count) {
         curLevel = [];
         level++;
     }
+    const root = {
+        id: -1,
+        pid: -2,
+        key: 'key-root'
+    }
+    nodes.unshift(root);
     return nodes;
 }
-export default dataMaker(30000);
+export default dataMaker(13000);

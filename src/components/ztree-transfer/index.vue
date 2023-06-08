@@ -207,9 +207,9 @@
                         this.echoData(echoData);
                     } else {
                         this.rightTree.hideNodes(this.rightFlattenNodes); // 隐藏所有节点
+                        this.loading = false;
                     }
                     if (this.leftFlattenNodes.length > 0) this.leftHasNode = true;
-                    this.loading = false;
                 }, 1000);
             },
             // 初始化树

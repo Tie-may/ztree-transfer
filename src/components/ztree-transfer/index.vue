@@ -524,16 +524,21 @@
 
     // 箭头
     .ztree li span.button.noline_open,
-    .ztree li span.button.noline_close {
+    .ztree li span.button.noline_close,
+    .ztree li span.button.noline_docu {
         background-image: none;
         display: inline-block;
         content: " ";
         width: 0;
         height: 0;
         border: 4px solid transparent;
-        border-left-color: #595959;
         transition: all .2s ease-in-out;
         margin-left: 6px;
+    }
+
+    .ztree li span.button.noline_open,
+    .ztree li span.button.noline_close {
+        border-left-color: #595959;
     }
 
     .ztree li span.button.noline_open {

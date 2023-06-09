@@ -63,6 +63,35 @@
     import standardData from "./assets/standardData";
     import simpleData from "./assets/simpleData";
 
+    // 针对叶子节点进行分组，只能在标准数据下使用
+    const grouping = (nodes, size) => {
+        nodes.forEach(node => {
+            const childNodes = node.children;
+            if (childNodes && !childNodes[0].children) { // 叶子节点的父节点
+                const groupNums = Math.ceil(childNodes.length / size); // 组数
+                if (groupNums <= 1) return;
+                node.children = [];
+                for (let i = 0; i < groupNums; i++) {
+                    const prefixKey = node.key + '-' + (i + 1);
+                    const startNum = i * size + 1;
+                    const endNum = startNum + size - 1 > childNodes.length ? childNodes.length : startNum + size - 1;
+                    const children = childNodes.slice(startNum - 1, endNum);
+                    children.forEach((item, idx) => {
+                        item.key = prefixKey + '-' + (idx + 1);
+                    })
+                    const temp = {
+                        title: startNum + '-' + endNum,
+                        key: prefixKey,
+                        children,
+                    }
+                    node.children.push(temp);
+                }
+            } else if (childNodes) {
+                grouping(childNodes, size);
+            }
+        })
+
+    }
     export default {
         name: "ZTreeTransfer",
         data() {
@@ -189,10 +218,11 @@
                 // 定时器模拟从接口获取数据
                 setTimeout(() => {
 
-                    this.leftNodes = standardData;
+                    grouping(standardData, 10); // 叶子节点按指定size分组
+                    this.leftNodes = standardData; // 使用标准数据
                     const echoData = ['1598552881013854211', '1661973549545558016']; // 回显数据，这里是有序id集合
 
-                    // this.leftNodes = simpleData;
+                    // this.leftNodes = simpleData; // 使用简单数据
                     // const echoData = [];
 
                     // 初始化树
